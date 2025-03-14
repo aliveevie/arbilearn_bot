@@ -1,5 +1,6 @@
 import os
 import threading
+import asyncio
 from fastapi import FastAPI
 import uvicorn
 from telegram import Update
@@ -59,18 +60,19 @@ async def handle_message(update: Update, context: CallbackContext) -> None:
 # Add handlers to the application
 telegram_app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
-# Function to run telegram bot
-def run_telegram_bot():
-    telegram_app.run_polling()
-
-# Main function to start both web server and telegram bot
-if __name__ == "__main__":
-    # Start telegram bot in a separate thread
-    threading.Thread(target=run_telegram_bot, daemon=True).start()
-    
+# Function to run FastAPI server
+def run_fastapi_server():
     # Get PORT from environment variable for Render compatibility
     port = int(os.getenv("PORT", 8000))
     
     # Start FastAPI server
     uvicorn.run(app, host="0.0.0.0", port=port)
+
+# Main function to start both web server and telegram bot
+if __name__ == "__main__":
+    # Start FastAPI server in a separate thread
+    threading.Thread(target=run_fastapi_server, daemon=True).start()
+    
+    # Run telegram bot in the main thread
+    telegram_app.run_polling()
  
