@@ -8,7 +8,7 @@ docker-compose.override.yaml
 docker-compose.override.yml
 docker-compose.override.yaml
 Dockerfile
-requirements.txt
+
 llm_logs
 README.Dockerfile.md
 .dockerignore
